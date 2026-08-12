@@ -1786,7 +1786,7 @@ _git_checkout ()
 	fi
 
 	if [ ${#COMPREPLY[@]} -eq 0 ]; then
-		__git_complete_index_file "--others"
+		__git_complete_index_file "--others --directory"
 	fi
 }
 
