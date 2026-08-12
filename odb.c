@@ -237,11 +237,6 @@ void odb_add_to_alternates_file(struct object_database *odb,
 struct odb_source *odb_add_to_alternates_memory(struct object_database *odb,
 						const char *dir)
 {
-	/*
-	 * Make sure alternates are initialized, or else our entry may be
-	 * overwritten when they are.
-	 */
-	odb_prepare_alternates(odb);
 	return odb_add_alternate_recursively(odb, dir, 0);
 }
 
@@ -249,12 +244,6 @@ struct odb_source *odb_set_temporary_primary_source(struct object_database *odb,
 						    const char *dir, int will_destroy)
 {
 	struct odb_source *source;
-
-	/*
-	 * Make sure alternates are initialized, or else our entry may be
-	 * overwritten when they are.
-	 */
-	odb_prepare_alternates(odb);
 
 	/*
 	 * Make a new primary odb and link the old primary ODB in as an
@@ -361,7 +350,6 @@ struct odb_source *odb_find_source(struct object_database *odb, const char *obj_
 	char *obj_dir_real = real_pathdup(obj_dir, 1);
 	struct strbuf odb_path_real = STRBUF_INIT;
 
-	odb_prepare_alternates(odb);
 	for (source = odb->sources; source; source = source->next) {
 		strbuf_realpath(&odb_path_real, source->path, 1);
 		if (!strcmp(obj_dir_real, odb_path_real.buf))
@@ -495,7 +483,6 @@ int odb_for_each_alternate(struct object_database *odb,
 	struct odb_source *alternate;
 	int r = 0;
 
-	odb_prepare_alternates(odb);
 	for (alternate = odb->sources->next; alternate; alternate = alternate->next) {
 		r = cb(alternate, payload);
 		if (r)
@@ -504,7 +491,7 @@ int odb_for_each_alternate(struct object_database *odb,
 	return r;
 }
 
-void odb_prepare_alternates(struct object_database *odb)
+static void odb_prepare_alternates(struct object_database *odb)
 {
 	struct strvec sources = STRVEC_INIT;
 
@@ -523,7 +510,6 @@ void odb_prepare_alternates(struct object_database *odb)
 
 int odb_has_alternates(struct object_database *odb)
 {
-	odb_prepare_alternates(odb);
 	return !!odb->sources->next;
 }
 
@@ -582,8 +568,6 @@ static int do_oid_object_info_extended(struct object_database *odb,
 
 	if (!odb_source_read_object_info(odb->inmemory_objects, oid, oi, flags))
 		return 0;
-
-	odb_prepare_alternates(odb);
 
 	while (1) {
 		struct odb_source *source;
@@ -847,7 +831,6 @@ int odb_freshen_object(struct object_database *odb,
 		       const struct object_id *oid)
 {
 	struct odb_source *source;
-	odb_prepare_alternates(odb);
 	for (source = odb->sources; source; source = source->next)
 		if (odb_source_freshen_object(source, oid, NULL))
 			return 1;
@@ -862,7 +845,6 @@ int odb_for_each_object_ext(struct object_database *odb,
 {
 	int ret;
 
-	odb_prepare_alternates(odb);
 	for (struct odb_source *source = odb->sources; source; source = source->next) {
 		if (opts->flags & ODB_FOR_EACH_OBJECT_LOCAL_ONLY && !source->local)
 			continue;
@@ -900,7 +882,6 @@ int odb_count_objects(struct object_database *odb,
 		return 0;
 	}
 
-	odb_prepare_alternates(odb);
 	for (source = odb->sources; source; source = source->next) {
 		unsigned long c;
 
@@ -980,7 +961,6 @@ int odb_find_abbrev_len(struct object_database *odb,
 		goto out;
 	}
 
-	odb_prepare_alternates(odb);
 	for (struct odb_source *source = odb->sources; source; source = source->next) {
 		ret = odb_source_find_abbrev_len(source, oid, len, &len);
 		if (ret)
@@ -1091,6 +1071,8 @@ struct object_database *odb_new(struct repository *repo,
 	o->alternate_db = secondary_sources;
 	o->inmemory_objects = &odb_source_inmemory_new(o)->base;
 
+	odb_prepare_alternates(o);
+
 	free(primary_source);
 	return o;
 }
@@ -1151,10 +1133,10 @@ void odb_prepare(struct object_database *o, enum odb_prepare_flags flags)
 	 */
 	if (flags & ODB_PREPARE_FLUSH_CACHES) {
 		o->loaded_alternates = 0;
+		odb_prepare_alternates(o);
 		o->object_count_valid = 0;
 	}
 
-	odb_prepare_alternates(o);
 	for (source = o->sources; source; source = source->next)
 		odb_source_prepare(source, flags);
 
