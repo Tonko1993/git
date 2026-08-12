@@ -38,7 +38,7 @@ test_expect_success 'create http-accessible bare repository' '
 # server makes the tests below fail loudly instead of silently vanishing.
 test_lazy_prereq SSL_VERIFYSTATUS '
 	git -c http.sslVerifyStatus=true \
-		ls-remote "$HTTPD_URL/smart/repo.git" 2>err
+		ls-remote "$HTTPD_URL/smart/repo.git" 2>err &&
 	! grep "cannot verify certificate status" err
 '
 
