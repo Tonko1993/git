@@ -1,148 +1,76 @@
-Git for Windows
-===============
 
-[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
-[![Open in Visual Studio Code](https://img.shields.io/static/v1?logo=visualstudiocode&label=&message=Open%20in%20Visual%20Studio%20Code&labelColor=2c2c32&color=007acc&logoColor=007acc)](https://open.vscode.dev/git-for-windows/git)
-[![Build status](https://github.com/git-for-windows/git/workflows/CI/badge.svg)](https://github.com/git-for-windows/git/actions?query=branch%3Amain+event%3Apush)
-[![Join the chat at https://gitter.im/git-for-windows/git](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/git-for-windows/git?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+# Interfaces modernes : HTML5/CSS3 avancés & performance (Grid/Flex + API de stockage)
 
-This is [Git for Windows](http://git-for-windows.github.io/), the Windows port
-of [Git](http://git-scm.com/).
+Cet atelier comporte deux volets. Le Volet A (nouveau) est un entraînement Grid/Flex avancés avec une solution fournie (codes) que vous pouvez copier et tester. Le Volet B conserve l’activité API de stockage Web (LocalStorage) de l’énoncé existant.
 
-The Git for Windows project is run using a [governance
-model](http://git-for-windows.github.io/governance-model.html). If you
-encounter problems, you can report them as [GitHub
-issues](https://github.com/git-for-windows/git/issues), discuss them in Git
-for Windows' [Discussions](https://github.com/git-for-windows/git/discussions)
-or on the [Git mailing list](mailto:git@vger.kernel.org), and [contribute bug
-fixes](https://gitforwindows.org/how-to-participate).
+## Cahier des charges
+Je dois :
 
-To build Git for Windows, please either install [Git for Windows'
-SDK](https://gitforwindows.org/#download-sdk), start its `git-bash.exe`, `cd`
-to your Git worktree and run `make`, or open the Git worktree as a folder in
-Visual Studio.
+• Une page : 01_GridFlex/index.html + 01_GridFlex/css/style.css.
 
-To verify that your build works, use one of the following methods:
+• Structure : Header (logo + nav), Sidebar (optionnelle), Main (cartes/sections), Footer.
 
-- If you want to test the built executables within Git for Windows' SDK,
-  prepend `<worktree>/bin-wrappers` to the `PATH`.
-- Alternatively, run `make install` in the Git worktree.
-- If you need to test this in a full installer, run `sdk build
-  git-and-installer`.
-- You can also "install" Git into an existing portable Git via `make install
-  DESTDIR=<dir>` where `<dir>` refers to the top-level directory of the
-  portable Git. In this instance, you will want to prepend that portable Git's
-  `/cmd` directory to the `PATH`, or test by running that portable Git's
-  `git-bash.exe` or `git-cmd.exe`.
-- If you built using a recent Visual Studio, you can use the menu item
-  `Build>Install git` (you will want to click on `Project>CMake Settings for
-  Git` first, then click on `Edit JSON` and then point `installRoot` to the
-  `mingw64` directory of an already-unpacked portable Git).
+• Header en Flexbox, layout global en Grid (areas ou 12 colonnes).
 
-  As in the previous  bullet point, you will then prepend `/cmd` to the `PATH`
-  or run using the portable Git's `git-bash.exe` or `git-cmd.exe`.
-- If you want to run the built executables in-place, but in a CMD instead of
-  inside a Bash, you can run a snippet like this in the `git-bash.exe` window
-  where Git was built (ensure that the `EOF` line has no leading spaces), and
-  then paste into the CMD window what was put in the clipboard:
+• Grille de cartes responsive : repeat() + minmax() + auto-fit/auto-fill.
 
-  ```sh
-  clip.exe <<EOF
-  set GIT_EXEC_PATH=$(cygpath -aw .)
-  set PATH=$(cygpath -awp ".:contrib/scalar:/mingw64/bin:/usr/bin:$PATH")
-  set GIT_TEMPLATE_DIR=$(cygpath -aw templates/blt)
-  set GITPERLLIB=$(cygpath -aw perl/build/lib)
-  EOF
-  ```
-- If you want to run the built executables in-place, but outside of Git for
-  Windows' SDK, and without an option to set/override any environment
-  variables (e.g. in Visual Studio's debugger), you can call the Git executable
-  by its absolute path and use the `--exec-path` option, like so:
+• 2 breakpoints minimum (ex. 900px et 600px).
 
-  ```cmd
-  C:\git-sdk-64\usr\src\git\git.exe --exec-path=C:\git-sdk-64\usr\src\git help
-  ```
+• Performance : sobriété (≤2 polices), images légères ; animations raisonnables.
 
-  Note: for this to work, you have to hard-link (or copy) the `.dll` files from
-  the `/mingw64/bin` directory to the Git worktree, or add the `/mingw64/bin`
-  directory to the `PATH` somehow or other.
+### EXERCICES GUIDES
 
-To make sure that you are testing the correct binary, call `./git.exe version`
-in the Git worktree, and then call `git version` in a directory/window where
-you want to test Git, and verify that they refer to the same version (you may
-even want to pass the command-line option `--build-options` to look at the
-exact commit from which the Git version was built).
+Je dois :
 
-Git - fast, scalable, distributed revision control system
-=========================================================
+• Créez index.html avec <header>, <nav>, <main>, <aside> (optionnel) et <footer>.
 
-Git is a fast, scalable, distributed revision control system with an
-unusually rich command set that provides both high-level operations
-and full access to internals.
+• Créez style.css et définissez un layout global en Grid via .layout.
 
-Git is an Open Source project covered by the GNU General Public
-License version 2 (some parts of it are under different licenses,
-compatible with the GPLv2). It was originally written by Linus
-Torvalds with help of a group of hackers around the net.
+• Option recommandée : grid-template-areas.
 
-Please read the file [INSTALL][] for installation instructions.
+• Mettez le header en Flex : aligner logo/nom à gauche et menu à droite.
 
-Many Git online resources are accessible from <https://git-scm.com/>
-including full documentation and Git related tools.
+• Ajoutez un style hover + focus visible.
 
-See [Documentation/gittutorial.adoc][] to get started, then see
-[Documentation/giteveryday.adoc][] for a useful minimum set of commands, and
-`Documentation/git-<commandname>.adoc` for documentation of each command.
-If git has been correctly installed, then the tutorial can also be
-read with `man gittutorial` or `git help tutorial`, and the
-documentation of each command with `man git-<commandname>` or `git help
-<commandname>`.
+• Créez une grille de cartes en CSS Grid avec repeat(auto-fit, minmax(...)).
 
-CVS users may also want to read [Documentation/gitcvs-migration.adoc][]
-(`man gitcvs-migration` or `git help cvs-migration` if git is
-installed).
+• Ajoutez une carte ‘featured’ qui occupe 2 colonnes sur desktop.
 
-The user discussion and development of core Git take place on the Git
-mailing list -- everyone is welcome to post bug reports, feature
-requests, comments and patches to git@vger.kernel.org (read
-[Documentation/SubmittingPatches][] for instructions on patch submission
-and [Documentation/CodingGuidelines][]).
+• À 900px : réduire la sidebar si besoin ; à 600px : passer en une seule colonne.
 
-Those wishing to help with error message, usage and informational message
-string translations (localization l10) should see [po/README.md][]
-(a `po` file is a Portable Object file that holds the translations).
+• Assurez-vous que le menu ne casse pas la mise en page.
 
-To subscribe to the list, send an email to <git+subscribe@vger.kernel.org>
-(see https://subspace.kernel.org/subscribing.html for details). The mailing
-list archives are available at <https://lore.kernel.org/git/>,
-<https://marc.info/?l=git> and other archival sites.
-The core git mailing list is plain text (no HTML!).
+• Ouvrir DevTools → Network : vérifier le poids total et le nombre de requêtes.
 
-Issues which are security relevant should be disclosed privately to
-the Git Security mailing list <git-security@googlegroups.com>.
+• Limiter polices et images ; éviter bibliothèques lourdes ; supprimer CSS inutilisé.
 
-The maintainer frequently sends the "What's cooking" reports that
-list the current status of various development topics to the mailing
-list.  The discussion following them give a good reference for
-project status, development direction and remaining tasks.
 
-The name "git" was given by Linus Torvalds when he wrote the very
-first version. He described the tool as "the stupid content tracker"
-and the name as (depending on your mood):
 
- - random three-letter combination that is pronounceable, and not
-   actually used by any common UNIX command.  The fact that it is a
-   mispronunciation of "get" may or may not be relevant.
- - stupid. contemptible and despicable. simple. Take your pick from the
-   dictionary of slang.
- - "global information tracker": you're in a good mood, and it actually
-   works for you. Angels sing, and a light suddenly fills the room.
- - "goddamn idiotic truckload of sh*t": when it breaks
 
-[INSTALL]: INSTALL
-[Documentation/gittutorial.adoc]: Documentation/gittutorial.adoc
-[Documentation/giteveryday.adoc]: Documentation/giteveryday.adoc
-[Documentation/gitcvs-migration.adoc]: Documentation/gitcvs-migration.adoc
-[Documentation/SubmittingPatches]: Documentation/SubmittingPatches
-[Documentation/CodingGuidelines]: Documentation/CodingGuidelines
-[po/README.md]: po/README.md
+
+
+## API de stockage Web (LocalStorage)
+
+L’API Web Storage (HTML5) permet de stocker des données localement dans le navigateur, sans base de données externe. Les données sont stockées sous forme de couples clé/valeur (chaînes de caractères). Dans cette annexe, vous allez créer une page qui mémorise le thème choisi (jour/nuit) et, dans une version avancée, mémorise aussi un paragraphe saisi par l’utilisateur.
+
+### Objectif de l’activité pratique
+• Créer une page HTML5 avec deux thèmes CSS3 : ‘jour’ et ‘nuit’.
+
+• L’utilisateur choisit le thème via des boutons.
+
+• Le dernier thème choisi est mémorisé dans localStorage et restauré au prochain chargement.
+
+• IMPORTANT (Semaine 1) : ne pas utiliser addEventListener. Utiliser uniquement onload/onclick (événements HTML classiques). 
+
+
+#### Travail Personnel — Version 1 & 2 (v1 & v2)
+• Ajouter d’autres thèmes (ex. bleu, vert, contrasté).
+
+• Ajouter un bouton par thème (onclick).
+
+• Mémoriser et restaurer le thème choisi via localStorage.
+
+• Nom du fichier à déposer : Nom_Prenom_LocalStorage_v1.zip
+
+Et dans la version 2, je dois saisir un texte dans un champ, puis cliquer sur un bouton pour remplacer le paragraphe existant. Le dernier thème ET le dernier paragraphe doivent être restaurés au prochain chargement.
+
